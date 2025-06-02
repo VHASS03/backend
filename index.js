@@ -56,7 +56,7 @@ app.use(cors({
     
     const allowedOrigins = [
       'https://www.vhass.in',
-      'https://vhass-backend.onrender.com'
+      'https://backend-v4my.onrender.com'
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
