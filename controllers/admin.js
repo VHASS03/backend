@@ -122,14 +122,14 @@ export const addLectures = async (req, res, next) => {
     };
 
     // Comprehensive file check
-    const file = files?.file?.[0] || req.file || req.body.file;
-    console.log('Processed File:', file);
+    // Comprehensive file check
+    const file = files?.file?.[0] || req.file;
 
-    // Add video if file exists
-    if (file) {
-      lectureData.video = file.path || file;
-      console.log('Video Path:', lectureData.video);
+    if (!file || !file.path) {
+    return res.status(400).json({ message: "Video file is required" });
     }
+
+    lectureData.video = file.path;
 
     // Create lecture
     const lecture = await Lecture.create(lectureData);
