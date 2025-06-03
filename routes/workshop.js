@@ -36,7 +36,8 @@ router.get("/workshop/:id", getSingleWorkshop);
 
 // Protected routes
 router.get("/myworkshop", isAuth, getMyWorkshops);
-router.post("/workshop/new", isAuth, isAdmin, uploadFiles.single('poster'), createWorkshop);
+//router.post("/workshop/new", isAuth, isAdmin, uploadFiles.single('poster'), createWorkshop);
+router.post("/workshop/new", isAuth, isAdmin, createWorkshop);
 router.delete("/workshop/:id", isAuth, isAdmin, (req, res, next) => {
   console.log('Delete Workshop Request - Headers:', req.headers);
   console.log('Delete Workshop Request - Session:', req.session);
