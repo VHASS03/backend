@@ -86,23 +86,38 @@ router.get('/verify-token', async (req, res) => {
 router.post('/logout', (req, res) => {
   try {
     console.log('Logging out user...');
-    res.clearCookie('token', {
-      httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production',
-      secure: true,
-      sameSite: 'none'
-    });
-    res.json({ 
-      success: true, 
-      message: 'Logged out successfully' 
+
+    // ✅ Destroy the session on the server
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session:', err);
+        return res.status(500).json({ 
+          success: false, 
+          message: 'Failed to logout' 
+        });
+      }
+
+      // ✅ Clear the session cookie
+      res.clearCookie('connect.sid', {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None'
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Logged out successfully'
+      });
     });
   } catch (error) {
     console.error('Logout error:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Error during logout' 
+    res.status(500).json({
+      success: false,
+      message: 'Server error during logout'
     });
   }
 });
+
 
 export default router; 
