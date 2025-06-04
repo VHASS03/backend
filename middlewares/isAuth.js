@@ -28,30 +28,30 @@ export const isAuth = async (req, res, next) => {
     }
 
     // 2. Check for token-based authentication
-    const token = req.headers.cookie || req.headers.authorization?.split(' ')[1];
-    if (token) {
-      console.log('Auth: Token-based authentication attempt');
-      const user = await User.findOne({ token });
-      if (!user) {
-        return res.status(401).json({ 
-          message: "Invalid token",
-          code: "INVALID_TOKEN"
-        });
-      }
-      req.user = {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        role: user.role
-      };
-      return next();
-    }
+    // const token = req.headers.cookie || req.headers.authorization?.split(' ')[1];
+    // if (token) {
+    //   console.log('Auth: Token-based authentication attempt');
+    //   const user = await User.findOne({ token });
+    //   if (!user) {
+    //     return res.status(401).json({ 
+    //       message: "Invalid token",
+    //       code: "INVALID_TOKEN"
+    //     });
+    //   }
+    //   req.user = {
+    //     _id: user._id,
+    //     email: user.email,
+    //     name: user.name,
+    //     role: user.role
+    //   };
+    //   return next();
+    // }
 
     // 3. Passport user
-    if (req.user) {
-      console.log('Auth: Passport user found');
-      return next();
-    }
+    // if (req.user) {
+    //   console.log('Auth: Passport user found');
+    //   return next();
+    // }
 
     // 4. Not authenticated
     console.log('Auth: No authentication found');
