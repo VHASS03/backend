@@ -42,10 +42,11 @@ router.get('/google/callback',
         if (err) {
           console.error("Session save error:", err);
           return res.redirect('https://www.vhass.in/login?error=session_error');
-      }
-    
-      // ✅ Redirect only after session is saved
-      res.redirect(process.env.FRONTEND_URL);
+        }
+      
+        // ✅ Redirect only after session is saved
+        res.redirect(process.env.FRONTEND_URL);
+      });
       // res.redirect(process.env.FRONTEND_URL);
     } catch (error) {
       console.error('Error in Google callback:', error);
