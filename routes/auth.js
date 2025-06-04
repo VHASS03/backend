@@ -35,10 +35,18 @@ router.get('/google/callback',
   async (req, res) => {
     try {
       console.log('Google authentication successful, setting session...');
-      console.log(req);
-      console.log(req.user);
+      // console.log(req);
+      // console.log(req.user);
       req.session.user = req.user;
+      req.session.save(err => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.redirect('https://www.vhass.in/login?error=session_error');
+      }
+    
+      // ✅ Redirect only after session is saved
       res.redirect(process.env.FRONTEND_URL);
+      // res.redirect(process.env.FRONTEND_URL);
     } catch (error) {
       console.error('Error in Google callback:', error);
       res.redirect('https://www.vhass.in/login?error=auth_failed');
