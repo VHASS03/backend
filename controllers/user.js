@@ -232,8 +232,9 @@ export const logoutUser = TryCatch(async (req, res) => {
   // Clear the authentication cookie
   res.clearCookie('token', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    // secure: process.env.NODE_ENV === 'production',
+    secure: true,
+    sameSite: 'none'
   });
 
   // Clear session if it exists
