@@ -35,6 +35,8 @@ router.get('/google/callback',
   async (req, res) => {
     try {
       console.log('Google authentication successful, setting session...');
+      console.log(req);
+      console.log(req.user);
       req.session.user = req.user;
       res.redirect(process.env.FRONTEND_URL);
     } catch (error) {
