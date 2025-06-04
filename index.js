@@ -56,7 +56,7 @@ app.use(cors({
     
     const allowedOrigins = [
       'https://www.vhass.in',
-      'https://backend-v4my.onrender.com'
+      'https://api.vhass.in'
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
@@ -65,7 +65,7 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  // origin: ['https://www.vhass.in', 'https://backend-v4my.onrender.com'],
+  // origin: ['https://www.vhass.in', 'https://api.vhass.in'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'token', 'Token', 'Accept', 'Origin', 'X-Requested-With'],
