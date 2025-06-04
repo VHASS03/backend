@@ -5,7 +5,8 @@ export const isAuth = async (req, res, next) => {
     console.log('Auth check - Session:', req.session ? 'exists' : 'none');
     console.log('Auth check - Session:', req.session);
     console.log('Auth check - Headers:', req.headers);
-    // console.log('Auth check - Cookies:', req.cookies);
+    console.log('Auth check - Cookies:', req.cookies);
+    console.log('Auth check - User:', req.user);
 
     // 1. Check for session-based login (Google/Passport)
     if (req.session && req.session.user) {
