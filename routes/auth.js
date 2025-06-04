@@ -88,8 +88,9 @@ router.post('/logout', (req, res) => {
     console.log('Logging out user...');
     res.clearCookie('token', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax'
+      // secure: process.env.NODE_ENV === 'production',
+      secure: true,
+      sameSite: 'none'
     });
     res.json({ 
       success: true, 
