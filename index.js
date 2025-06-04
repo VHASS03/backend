@@ -87,7 +87,7 @@ app.use(session({
     // secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     secure: true,
-    sameSite: 'None',
+    sameSite: 'none',
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
