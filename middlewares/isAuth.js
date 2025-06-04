@@ -27,7 +27,7 @@ export const isAuth = async (req, res, next) => {
     }
 
     // 2. Check for token-based authentication
-    const token = req.headers.token || req.headers.authorization?.split(' ')[1];
+    const token = req.headers.cookie || req.headers.authorization?.split(' ')[1];
     if (token) {
       console.log('Auth: Token-based authentication attempt');
       const user = await User.findOne({ token });
