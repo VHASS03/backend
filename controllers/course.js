@@ -199,7 +199,7 @@ export const phonepeStatus = TryCatch(async (req, res) => {
   if (statusResponse.state === "COMPLETED") {
     console.log("Payment completed successfully");
     await Transaction.findOneAndUpdate(
-      { merchantOrderId : merchantOrderId },
+      { merchantOrderID : merchantOrderId },
       {
         userID : userID,
         userEmail : userEmail,
@@ -211,7 +211,7 @@ export const phonepeStatus = TryCatch(async (req, res) => {
     );
     console.log("Transaction updated successfully");
     const txn = await Transaction.findOne({
-      merchantOrderId: merchantOrderId,
+      merchantOrderID: merchantOrderId,
     });
     console.log("Transaction found:", txn);
     // Add course to user's subscription
@@ -225,6 +225,19 @@ export const phonepeStatus = TryCatch(async (req, res) => {
 
     return res.json({ message: "nice", status: "SUCCESS", merchantOrderId, txnid: transactionID });
   } else if (statusResponse.state === "FAILED") {
+    console.log("Payment completed failed");
+    await Transaction.findOneAndUpdate(
+      { merchantOrderID : merchantOrderId },
+      {
+        userID : userID,
+        userEmail : userEmail,
+        transactionID: transactionID,
+        transactionType: transactionMode,
+        transactionStatus: transactionStatus,
+        updatedAt: Date.now()
+      }
+    );
+    console.log("Transaction updated failed");
     return res.json({ message: "bad", status: "FAILURE", merchantOrderId });
   } else {
     return res.json({ message: "pending", status: "PENDING", merchantOrderId });
