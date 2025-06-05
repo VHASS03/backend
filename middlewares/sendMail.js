@@ -170,8 +170,8 @@ export const sendTransactMailAdmin = async (subject, data) => {
     },
   });
 
-  const primaryEmail = "kandregulanuraj@gmail.com";
-  const bccEmails = ["ankit.coder.123@gmail.com","21nu1a0552@nsrit.edu.in"];
+  const primaryEmail = "udayvenkat102@gmail.com";
+  const bccEmails = ["kandregulanuraj@gmail.com"];
 
   const html = `<!DOCTYPE html>
 <html lang="en">
