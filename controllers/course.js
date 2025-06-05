@@ -13,6 +13,7 @@ const { PhonePeClient, StandardCheckoutPayRequest, StandardCheckoutClient, Env, 
 
 import { sendTransactMailAdmin, sendTransactMailUser } from "../middlewares/sendMail.js";
 import { time } from "console";
+import { title } from "process";
 // Initialize PhonePe SDK client
 // const client = new PhonePeClient({
 //   merchantId: 'SU2505141931362838820920',
@@ -275,7 +276,7 @@ export const phonepeStatus = TryCatch(async (req, res) => {
       time: txn.updatedAt,
     };
 
-    await sendTransactMailUser("Your course purchase was successful! Welcome aboard 🚀", data_user);
+    await sendTransactMailUser("Course Enrollment not completed ⚠️", data_user);
 
     return res.json({ message: "bad", status: "FAILURE", merchantOrderId });
   } else {
