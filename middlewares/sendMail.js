@@ -223,13 +223,13 @@ export const sendTransactMailAdmin = async (subject, data) => {
 </head>
 <body>
   <div class="container">
-    <h1>dollar dollar bill</h1>
-    <p>${data.name}</p>
-    <p>${data.email}</p>
-    <p>${data.course}</p>
-    <p>${data.txnid}</p>
-    <p>${data.stat}</p>
-    <p>${data.time}</p>
+    <h1>Somone Bought your course</h1>
+    <p>Name : ${data.name}</p>
+    <p>Email : ${data.email}</p>
+    <p>Course name : ${data.course}</p>
+    <p>TRANSACTION ID : ${data.txnid}</p>
+    <p>Payment Status : ${data.stat}</p>
+    <p>Date & Time : ${data.time}</p>
     <div class="footer">
       <p>Thank you,<br>Your Website Team</p>
       <p><a href="https://vhass.in">vhass.in</a></p>
@@ -243,6 +243,91 @@ export const sendTransactMailAdmin = async (subject, data) => {
     from: process.env.Gmail,
     to: primaryEmail,
     bcc: bccEmails,
+    subject,
+    html,
+  });
+};
+
+export const sendTransactMailUser = async (subject, data) => {
+  const transport = createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    auth: {
+      user: process.env.Gmail,
+      pass: process.env.Password,
+    },
+  });
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your course purchase was successful! Welcome aboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+    }
+    h1 {
+      color: #5a2d82;
+    }
+    p {
+      color: #666666;
+    }
+    .button {
+      display: inline-block;
+      padding: 15px 25px;
+      margin: 20px 0;
+      background-color: #5a2d82;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .footer {
+      margin-top: 20px;
+      color: #999999;
+      text-align: center;
+    }
+    .footer a {
+      color: #5a2d82;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your course purchase was successful! Welcome aboard 🚀</h1>
+    <p>Name : ${data.name}</p>
+    <p>Course name : ${data.course}</p>
+    <p>TRANSACTION ID : ${data.txnid}</p>
+    <p>Payment Status : ${data.stat}</p>
+    <p>Date & Time : ${data.time}</p>
+    <div class="footer">
+      <p>Thank you,<br>Vhass</p>
+      <p>✉️ info@vhass.in</p>
+      <p>📞 +91 8985320226</p>
+      <p><a href="https://vhass.in">vhass.in</a></p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  await transport.sendMail({
+    from: process.env.Gmail,
+    to: data.email,
     subject,
     html,
   });
