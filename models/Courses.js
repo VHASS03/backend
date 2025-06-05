@@ -67,6 +67,10 @@ const schema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  purchasers: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+  },
 });
 
 export const Courses = mongoose.model("Courses", schema);
