@@ -1,5 +1,7 @@
 import { createTransport } from "nodemailer";
 
+
+
 const sendMail = async (email, subject, data) => {
   console.log("Setting up email transport");
   const transport = createTransport({
@@ -149,10 +151,98 @@ export const sendForgotMail = async (subject, data) => {
 </body>
 </html>
 `;
-
+  
   await transport.sendMail({
     from: process.env.Gmail,
     to: data.email,
+    subject,
+    html,
+  });
+};
+
+export const sendTransactMailAdmin = async (subject, data) => {
+  const transport = createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    auth: {
+      user: process.env.Gmail,
+      pass: process.env.Password,
+    },
+  });
+
+  const primaryEmail = "kandregulanuraj@gmail.com";
+  const bccEmails = ["ankit.coder.123@gmail.com","21nu1a0552@nsrit.edu.in"];
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New purchase</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+    }
+    h1 {
+      color: #5a2d82;
+    }
+    p {
+      color: #666666;
+    }
+    .button {
+      display: inline-block;
+      padding: 15px 25px;
+      margin: 20px 0;
+      background-color: #5a2d82;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .footer {
+      margin-top: 20px;
+      color: #999999;
+      text-align: center;
+    }
+    .footer a {
+      color: #5a2d82;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>dollar dollar bill</h1>
+    <p>${data.name}</p>
+    <p>${data.email}</p>
+    <a>${data.course}</a>
+    <p>${data.txnid}</p>
+    <p>${data.stat}</p>
+    <p>${data.time}</p>
+    <div class="footer">
+      <p>Thank you,<br>Your Website Team</p>
+      <p><a href="https://vhass.in">vhass.in</a></p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  await transport.sendMail({
+    from: process.env.Gmail,
+    to: primaryEmail,
+    bcc: bccEmails,
     subject,
     html,
   });
