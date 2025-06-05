@@ -189,9 +189,9 @@ export const phonepeStatus = TryCatch(async (req, res) => {
 
   console.log("PhonePe getOrderStatus response:", statusResponse);
 
-  const transactionID = statusResponse.paymentDetails.transactionId;
+  const transactionID = statusResponse.paymentDetails[0].transactionId;
 
-  const transactionMode = statusResponse.paymentDetails.paymentMode;
+  const transactionMode = statusResponse.paymentDetails[0].paymentMode;
 
   const transactionStatus = statusResponse.state;
 
