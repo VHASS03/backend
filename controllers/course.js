@@ -4,6 +4,7 @@ import TryCatch from "../middlewares/TryCatch.js";
 import { Courses } from "../models/Courses.js";
 import { Lecture } from "../models/Lecture.js";
 import { User } from "../models/User.js";
+import { Transaction } from "../models/Transaction.js";
 import { Progress } from "../models/Progress.js";
 import pkg from 'pg-sdk-node';
 import mongoose from "mongoose";
@@ -142,6 +143,16 @@ export const phonepeCheckout = async (req, res) => {
     const amount = Math.round(Number(course.price) * 100); // in paise
     // const redirectUrl = `http://localhost:5173/payment-success/${course._id}`;
     // const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${course._id}`;
+    const txn = await Transaction.create({
+        userID: "",
+        userEmail: "",
+        courseID: course._id,
+        transactionID: "",
+        merchantOrderId: merchantOrderId,
+        transactionAmount: course.price,
+        transactionType: "",
+        transactionStatus: ""
+      });
     const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${merchantOrderId}`;
     const request = StandardCheckoutPayRequest.builder()
       .merchantOrderId(merchantOrderId)
@@ -151,7 +162,7 @@ export const phonepeCheckout = async (req, res) => {
     const response = await client.pay(request);
     const checkoutPageUrl = response.redirectUrl;
     // res.json({ checkoutPageUrl, merchantOrderId });
-    res.json({ checkoutPageUrl });
+    res.json({ checkoutPageUrl});
   } catch (err) {
     console.error('PhonePe API Error:', err.response?.data || err.message);
     res.status(500).json({
@@ -174,11 +185,43 @@ export const phonepeStatus = TryCatch(async (req, res) => {
   const merchantOrderId = req.params.merchantOrderId;
   console.log("phonepeStatus (course) – merchantOrderId:", merchantOrderId);
 
+  const user = await User.findById(req.user._id);
+
+  const userID = user._id;
+  const userEmail = user.email;
+
   const statusResponse = await client.getOrderStatus(merchantOrderId);
+
   console.log("PhonePe getOrderStatus response:", statusResponse);
 
+  const transactionID = statusResponse.paymentDetails.transactionId;
+
+  const transactionMode = statusResponse.paymentDetails.paymentMode;
+
+  const transactionStatus = statusResponse.state;
+
   if (statusResponse.state === "COMPLETED") {
-    return res.json({ message: "nice", status: "SUCCESS", merchantOrderId });
+    console.log("Payment completed successfully");
+    await Transaction.findOneAndUpdate(
+      { merchantOrderId : merchantOrderId },
+      {
+        userID : userID,
+        userEmail : userEmail,
+        transactionID: transactionID,
+        transactionType: transactionMode,
+        transactionStatus: transactionStatus,
+        updatedAt: Date.now()
+      }
+    );
+    const txn = await Transaction.findOne({
+      merchantOrderId: merchantOrderId,
+    });
+    // Add course to user's subscription
+    await User.findByIdAndUpdate(user._id, {
+      $addToSet: { subscription: txn.courseID },
+    });
+
+    return res.json({ message: "nice", status: "SUCCESS", merchantOrderId, txnid: transactionID });
   } else if (statusResponse.state === "FAILED") {
     return res.json({ message: "bad", status: "FAILURE", merchantOrderId });
   } else {
