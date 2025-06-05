@@ -229,7 +229,7 @@ export const phonepeStatus = TryCatch(async (req, res) => {
       txnid: transactionID,
       stat: transactionStatus,
       time: txn.updatedAt,
-    }
+    };
 
     await sendTransactMailAdmin("dollar",data);
 
