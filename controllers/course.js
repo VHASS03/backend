@@ -216,6 +216,10 @@ export const phonepeStatus = TryCatch(async (req, res) => {
       $addToSet: { subscription: txn.courseID },
     });
 
+    await Courses.findByIdAndUpdate(txn.courseID, {
+      $addToSet: { purchasers: user._id },
+    });
+
     return res.json({ message: "nice", status: "SUCCESS", merchantOrderId, txnid: transactionID });
   } else if (statusResponse.state === "FAILED") {
     return res.json({ message: "bad", status: "FAILURE", merchantOrderId });
