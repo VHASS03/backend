@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 import { randomUUID } from 'crypto';
 const { PhonePeClient, StandardCheckoutPayRequest, StandardCheckoutClient, Env, CreateSdkOrderRequest } = pkg;
 
-import { sendTransactMailAdmin } from "../middlewares/sendMail.js";
+import { sendTransactMailAdmin, sendTransactMailUser } from "../middlewares/sendMail.js";
 import { time } from "console";
 // Initialize PhonePe SDK client
 // const client = new PhonePeClient({
@@ -231,7 +231,18 @@ export const phonepeStatus = TryCatch(async (req, res) => {
       time: txn.updatedAt,
     };
 
-    await sendTransactMailAdmin("dollar",data);
+    await sendTransactMailAdmin("Somone Bought your course",data);
+
+    const data_user = {
+      name: user.name,
+      email: user.email,
+      course: course.title,
+      txnid: transactionID,
+      stat: transactionStatus,
+      time: txn.updatedAt,
+    };
+
+    await sendTransactMailUser("Your course purchase was successful! Welcome aboard 🚀",data_user);
 
     return res.json({ message: "nice", status: "SUCCESS", merchantOrderId, txnid: transactionID });
   } else if (statusResponse.state === "FAILED") {
@@ -248,6 +259,24 @@ export const phonepeStatus = TryCatch(async (req, res) => {
       }
     );
     console.log("Transaction updated failed");
+
+    const txn = await Transaction.findOne({
+      merchantOrderID: merchantOrderId,
+    });
+
+    const course = await Courses.findById(txn.courseID);
+
+    const data_user = {
+      name: user.name,
+      email: user.email,
+      course: course.title,
+      txnid: transactionID,
+      stat: transactionStatus,
+      time: txn.updatedAt,
+    };
+
+    await sendTransactMailUser("Your course purchase was successful! Welcome aboard 🚀", data_user);
+
     return res.json({ message: "bad", status: "FAILURE", merchantOrderId });
   } else {
     return res.json({ message: "pending", status: "PENDING", merchantOrderId });
