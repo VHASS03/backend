@@ -263,7 +263,7 @@ export const sendTransactMailUser = async (subject, data) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your course purchase was successful! Welcome aboard</title>
+  <title>${subject}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -308,7 +308,7 @@ export const sendTransactMailUser = async (subject, data) => {
 </head>
 <body>
   <div class="container">
-    <h1>Your course purchase was successful! Welcome aboard 🚀</h1>
+    <h1>${subject}</h1>
     <p>Name : ${data.name}</p>
     <p>Course name : ${data.course}</p>
     <p>TRANSACTION ID : ${data.txnid}</p>
