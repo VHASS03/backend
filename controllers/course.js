@@ -144,14 +144,9 @@ export const phonepeCheckout = async (req, res) => {
     // const redirectUrl = `http://localhost:5173/payment-success/${course._id}`;
     // const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${course._id}`;
     const txn = await Transaction.create({
-        userID: "",
-        userEmail: "",
         courseID: course._id,
-        transactionID: "",
         merchantOrderId: merchantOrderId,
         transactionAmount: course.price,
-        transactionType: "",
-        transactionStatus: ""
       });
     const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${merchantOrderId}`;
     const request = StandardCheckoutPayRequest.builder()
