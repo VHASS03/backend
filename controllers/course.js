@@ -141,7 +141,8 @@ export const phonepeCheckout = async (req, res) => {
     const merchantOrderId = randomUUID();
     const amount = Math.round(Number(course.price) * 100); // in paise
     // const redirectUrl = `http://localhost:5173/payment-success/${course._id}`;
-    const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${course._id}`;
+    // const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${course._id}`;
+    const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${merchantOrderId}`;
     const request = StandardCheckoutPayRequest.builder()
       .merchantOrderId(merchantOrderId)
       .amount(amount)
@@ -149,6 +150,7 @@ export const phonepeCheckout = async (req, res) => {
       .build();
     const response = await client.pay(request);
     const checkoutPageUrl = response.redirectUrl;
+    // res.json({ checkoutPageUrl, merchantOrderId });
     res.json({ checkoutPageUrl });
   } catch (err) {
     console.error('PhonePe API Error:', err.response?.data || err.message);
@@ -160,10 +162,28 @@ export const phonepeCheckout = async (req, res) => {
 };
 
 export const phonepeStatus = TryCatch(async (req, res) => {
-  const transactionId = req.params.transactionId;
-  console.log("phonepeStatus (course) – transactionId:", transactionId);
+  // const transactionId = req.params.transactionId;
+  // console.log("phonepeStatus (course) – transactionId:", transactionId);
   // (Placeholder – in production, use phonepe-kit or PhonePe API to check status)
-  res.json({ status: "pending", transactionId });
+  // res.json({ status: "pending", transactionId });
+  // const statusResponse = await client.getPaymentStatus(transactionId); // Example method
+
+  // Example structure of statusResponse:
+  // { status: "SUCCESS" } or { status: "FAILED" } or { status: "PENDING" }
+
+  const merchantOrderId = req.params.merchantOrderId;
+  console.log("phonepeStatus (course) – merchantOrderId:", merchantOrderId);
+
+  const statusResponse = await client.getOrderStatus(merchantOrderId);
+  console.log("PhonePe getOrderStatus response:", statusResponse);
+
+  if (statusResponse.state === "COMPLETED") {
+    return res.json({ message: "nice", status: "SUCCESS", merchantOrderId });
+  } else if (statusResponse.state === "FAILED") {
+    return res.json({ message: "bad", status: "FAILURE", merchantOrderId });
+  } else {
+    return res.json({ message: "pending", status: "PENDING", merchantOrderId });
+  }
 });
 
 // Add createCourse function
