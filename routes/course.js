@@ -28,6 +28,6 @@ router.get("/mycourse", isAuth, getMyCourses);
 
 // PhonePe payment endpoints
 router.post("/course/phonepe/checkout/:id", isAuth, phonepeCheckout);
-router.post("/course/phonepe/status/:transactionId", isAuth, phonepeStatus);
+router.post("/course/phonepe/status/:merchantOrderId", isAuth, phonepeStatus);
 
 export default router;
