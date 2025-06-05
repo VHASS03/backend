@@ -226,7 +226,7 @@ export const sendTransactMailAdmin = async (subject, data) => {
     <h1>dollar dollar bill</h1>
     <p>${data.name}</p>
     <p>${data.email}</p>
-    <a>${data.course}</a>
+    <p>${data.course}</p>
     <p>${data.txnid}</p>
     <p>${data.stat}</p>
     <p>${data.time}</p>
