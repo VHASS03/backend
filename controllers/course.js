@@ -231,7 +231,7 @@ export const phonepeStatus = TryCatch(async (req, res) => {
       time: txn.updatedAt,
     }
 
-    await sendTransactMailAdmin(data);
+    await sendTransactMailAdmin("dollar",data);
 
     return res.json({ message: "nice", status: "SUCCESS", merchantOrderId, txnid: transactionID });
   } else if (statusResponse.state === "FAILED") {
