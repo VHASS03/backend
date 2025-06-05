@@ -147,6 +147,7 @@ export const phonepeCheckout = async (req, res) => {
         courseID: course._id,
         merchantOrderID: merchantOrderId,
         transactionAmount: course.price,
+        transactionStatus: "PENDING",
       });
     const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${merchantOrderId}`;
     const request = StandardCheckoutPayRequest.builder()
@@ -208,9 +209,11 @@ export const phonepeStatus = TryCatch(async (req, res) => {
         updatedAt: Date.now()
       }
     );
+    console.log("Transaction updated successfully");
     const txn = await Transaction.findOne({
       merchantOrderId: merchantOrderId,
     });
+    console.log("Transaction found:", txn);
     // Add course to user's subscription
     await User.findByIdAndUpdate(user._id, {
       $addToSet: { subscription: txn.courseID },
