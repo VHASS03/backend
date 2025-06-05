@@ -37,7 +37,6 @@ const schema = new mongoose.Schema(
 
     transactionStatus: {
       type: String,
-      enum: ["PENDING", "COMPLETED", "FAILED"],
     },
     
     createdAt: {
