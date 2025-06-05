@@ -145,7 +145,7 @@ export const phonepeCheckout = async (req, res) => {
     // const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${course._id}`;
     const txn = await Transaction.create({
         courseID: course._id,
-        merchantOrderId: merchantOrderId,
+        merchantOrderID: merchantOrderId,
         transactionAmount: course.price,
       });
     const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}/payment-success/${merchantOrderId}`;
